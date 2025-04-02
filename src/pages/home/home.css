@@ -1,0 +1,81 @@
+* {
+  box-sizing: border-box;
+}
+/* 弹性布局 */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 100%;
+  }
+.sale-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.chart-row {
+  display: flex;
+}
+.leftcolumn {
+  flex: 40%;
+}
+.rightcolumn {
+  flex: 60%;
+}
+.col-8 {
+  flex: 33.33%;
+}
+/* 卡片 */
+.card {
+  background-color: white;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 25px;
+}
+.card:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+/* 其他 */
+.user {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+}
+.user .user-info {
+  flex: 50%;
+}
+.user .user-avatar {
+  flex: 50%;
+}
+.login-info {
+  text-align: start;
+  padding-top: 10px;
+}
+.login-info p {
+  line-height: 2px;
+  font-size: 14px;
+  color: lightgray;
+}
+.login-info p span {
+  line-height: 30px;
+  font-size: 14px;
+  color: gray;
+}
+.sale-row .icon-box {
+  width: 80px;
+  height: 80px;
+  line-height: 85px;
+  text-align: center;
+  color: white;
+  border-radius: 0 25px 0 25px;
+}
+.sale-row .icon-box .anticon {
+  font-size: 30px;
+}
+.sale-row .sale-info {
+  line-height: 30px;
+  text-align: center;
+}
