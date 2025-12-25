@@ -172,3 +172,31 @@ export function getMerchantDetail(merchantId) {
         method: "get"
     })
 }
+
+// 商品销售统计API（商户视角）
+export function getProductSalesStatistics(params) {
+    return http.request({
+        url: "/api/merchant/statistics/product-sales",
+        method: "get",
+        params
+    })
+}
+
+// 商户销售排行API（管理员视角）
+export function getMerchantRanking(params) {
+    return http.request({
+        url: "/api/admin/ranking",
+        method: "get",
+        params
+    })
+}
+
+// 商品类别销售趋势API
+// 请求参数: startDate(开始日期), endDate(结束日期), groupBy(分组方式: day|week|month)
+export function getCategorySalesStatistics(params) {
+    return http.request({
+        url: "/api/merchant/statistics/category-sales",
+        method: "get",
+        params
+    })
+}

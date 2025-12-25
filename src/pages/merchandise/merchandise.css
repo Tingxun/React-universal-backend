@@ -16,6 +16,26 @@
     color: #262626;
 }
 
+.chart-area {
+    margin-bottom: 24px;
+}
+
+.chart-area .ant-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-area .ant-card-head {
+    background-color: #fafafa;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.chart-area .ant-card-head-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+}
+
 .search-area {
     margin-bottom: 24px;
     padding: 16px;

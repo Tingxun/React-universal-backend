@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
     Table, 
     Button, 
-    Space, 
     Card, 
     Row, 
     Col, 
@@ -14,17 +13,20 @@ import {
     Form,
     Input,
     InputNumber,
-    Select
+    Select,
+    Spin
 } from 'antd';
 import ProductSearch from './components/ProductSearch';
+import Echarts from '../../components/echarts';
 import { 
     PlusOutlined, 
     EditOutlined, 
     DeleteOutlined,
-    EyeOutlined,
-    FilterOutlined
+    FilterOutlined,
+    BarChartOutlined,
+    LineChartOutlined
 } from '@ant-design/icons';
-import { getProductList, deleteProduct, createProduct, updateProduct } from '../../api/index';
+import { getProductList, deleteProduct, createProduct, updateProduct, getMerchantRanking, getCategorySalesStatistics } from '../../api/index';
 import { getCurrentUser } from '../../utils/jwt';
 import { useNavigate } from 'react-router-dom';
 import './merchandise.css';
@@ -61,6 +63,7 @@ function Merchandise() {
     const navigate = useNavigate();
     const [allProducts, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [chartLoading, setChartLoading] = useState(false);
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: 10,
@@ -85,6 +88,10 @@ function Merchandise() {
         mainImage: '',
         status: 'PENDING'
     });
+    
+    // 图表数据状态
+    const [merchantRankingData, setMerchantRankingData] = useState({});
+    const [productSalesData, setProductSalesData] = useState({});
 
     // 获取用户角色
     useEffect(() => {
@@ -98,6 +105,100 @@ function Merchandise() {
             navigate('/login');
         }
     }, [navigate]);
+
+    // 获取商户销售排行数据（管理员视角）
+    const fetchMerchantRanking = useCallback(async () => {
+        if (userRole !== 'admin') return;
+        
+        setChartLoading(true);
+        try {
+            const res = await getMerchantRanking({
+                startDate: '2024-01-01',
+                endDate: '2024-12-31',
+                rankingType: 'sales',
+                limit: 5
+            });
+            console.log('获取商户排行数据成功:', res || []);
+            
+            if (res.data.code === 20000) {
+                const data = res.data.data;
+                
+                // 为每个商户生成不同的颜色
+                const colors = ['#1890ff', '#52c41a', '#faad14', '#f5222d', '#722ed1', 
+                               '#fa541c', '#13c2c2', '#eb2f96', '#f759ab', '#9254de'];
+                
+                const chartData = {
+                    xAxis: data.rankingList.map(item => item.merchantName),
+                    series: [{
+                        name: '销售额',
+                        type: 'bar',
+                        data: data.rankingList.map((item, index) => ({
+                            value: item.salesAmount,
+                            itemStyle: {
+                                color: colors[index % colors.length]
+                            }
+                        }))
+                    }]
+                };
+                setMerchantRankingData(chartData);
+            } else {
+                message.error(res.data.message || '获取商户排行数据失败');
+            }
+        } catch (error) {
+            console.error('获取商户排行数据失败:', error);
+            message.error('获取商户排行数据失败');
+        } finally {
+            setChartLoading(false);
+        }
+    }, [userRole]);
+
+    // 获取商品类别销售统计数据（商户视角）
+    const fetchProductSalesStatistics = useCallback(async () => {
+        if (userRole === 'admin') return;
+        
+        setChartLoading(true);
+        try {
+            const res = await getCategorySalesStatistics({
+                startDate: '2024-01-01',
+                endDate: '2024-12-31',
+                groupBy: 'month'
+            });
+            console.log('获取商品类别销售数据成功:', res || []);
+            
+            if (res.data.code === 20000) {
+                const data = res.data.data;
+                
+                // 使用新接口返回的时间点数据
+                const timePoints = data.timePoints || [];
+                
+                // 按分类处理数据
+                const seriesData = data.series?.map(categoryData => {
+                    return {
+                        name: categoryData.category,
+                        type: 'line',
+                        smooth: true,
+                        data: timePoints.map(timePoint => {
+                            const pointData = categoryData.data?.find(item => item.date === timePoint);
+                            return pointData ? pointData.salesAmount || 0 : 0;
+                        })
+                    };
+                }) || [];
+                
+                const chartData = {
+                    xAxis: timePoints,
+                    series: seriesData
+                };
+                setProductSalesData(chartData);
+            } else {
+                message.error(res.data.message || '获取商品类别销售数据失败');
+            }
+        } catch (error) {
+            console.error('获取商品类别销售数据失败:', error);
+            message.error('获取商品类别销售数据失败');
+        } finally {
+            setChartLoading(false);
+        }
+    }, [userRole]);
 
     // 获取所有商品数据
     const fetchAllProducts = useCallback(async () => {
@@ -155,8 +256,13 @@ function Merchandise() {
     useEffect(() => {
         if (userRole) {
             fetchAllProducts();
+            if (userRole === 'admin') {
+                fetchMerchantRanking();
+            } else {
+                fetchProductSalesStatistics();
+            }
         }
-    }, [userRole, fetchAllProducts]);
+    }, [userRole, fetchAllProducts, fetchMerchantRanking, fetchProductSalesStatistics]);
 
     // 更新分页总数
     useEffect(() => {
@@ -433,7 +539,7 @@ function Merchandise() {
         if (userRole === 'admin') {
             columnsCopy.splice(2, 0, {
                 title: '商户',
-                dataIndex: 'merchantId',
+                dataIndex: 'merchantName',
                 key: 'merchantId',
                 width: 120,
                 ellipsis: true
@@ -458,6 +564,47 @@ function Merchandise() {
                     </Button>
                 }
             >
+                {/* 图表区域 */}
+                <div className="chart-area">
+                    <Spin spinning={chartLoading}>
+                        {userRole === 'admin' ? (
+                            <Card 
+                                title={
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <BarChartOutlined />
+                                        <span>商户销售排行</span>
+                                    </div>
+                                }
+                                style={{ marginBottom: '16px' }}
+                            >
+                                <Echarts 
+                                    style={{ width: '100%', height: '400px' }}
+                                    chartData={merchantRankingData}
+                                    isAxisChart={true}
+                                    chartType="bar"
+                                />
+                            </Card>
+                        ) : (
+                            <Card 
+                                title={
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <LineChartOutlined />
+                                        <span>商品类别销售趋势</span>
+                                    </div>
+                                }
+                                style={{ marginBottom: '16px' }}
+                            >
+                                <Echarts 
+                                    style={{ width: '100%', height: '400px' }}
+                                    chartData={productSalesData}
+                                    isAxisChart={true}
+                                    chartType="line"
+                                />
+                            </Card>
+                        )}
+                    </Spin>
+                </div>
+
                 {/* 搜索区域 */}
                 <div className="search-area">
                     <Row gutter={[16, 16]} align="middle">
