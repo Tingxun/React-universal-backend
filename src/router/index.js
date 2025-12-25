@@ -1,11 +1,13 @@
 import {createBrowserRouter, Navigate} from 'react-router-dom';
 import Main from '../pages/main';
 import Home from '../pages/home';   
-import User from '../pages/user';
-import Mall from '../pages/mall';
+import Sales from '../pages/sales';
+import Merchandise from '../pages/merchandise';
 import Login from '../pages/login';
+import Register from '../pages/register';
 import PageTwo from '../pages/other/pageTwo';
 import PageOne from '../pages/other/pageOne';
+import RouteGuard from './RouteGuard';
 
 /**
  * router对象的属性及作用：
@@ -38,12 +40,16 @@ const routes = [
                 element: <Home />,
             },
             {
-                path: 'user',
-                element: <User />,
+                path: 'sales',
+                element: (
+                    <RouteGuard requiredRoles={['admin']} redirectTo="/home">
+                        <Sales />
+                    </RouteGuard>
+                ),
             },
             {
-                path: 'mall',
-                element: <Mall />,
+                path: 'merchandise',
+                element: <Merchandise />,
             },
             {
                 path: 'other',
@@ -63,6 +69,10 @@ const routes = [
     {
         path: '/login',
         element: <Login />,
+    },
+    {
+        path: '/register',
+        element: <Register />,
     }
 ];
 

@@ -1,6 +1,7 @@
 import './login.css';
-import { Button, Checkbox, Form, Input } from 'antd';
-import { getMenu } from '../../api/index';
+import { Button, Checkbox, Form, Input, Select } from 'antd';
+import { login } from '../../api/index';
+import { getUserInfoFromToken } from '../../utils/jwt';
 /**
  * 特性	    useNavigate	            Navigate
  * 类型	        Hook	              组件
@@ -10,21 +11,36 @@ import { getMenu } from '../../api/index';
  */
 import { useNavigate, Navigate } from 'react-router-dom';
 
+const { Option } = Select;
+
 function Login() {
     const navigate = useNavigate();
     if (localStorage.getItem('token')) {
         return <Navigate to='/login' replace />
     }
     function handleSubmit(values) {
-        getMenu(values).then(res => {
+        
+        console.log('values', values);
+        login(values).then(res => {
             console.log('res', res);
             // 判断登录验证情况
             if (res.data.code === -20000) {
                 alert(res.data.data.message);
                 return;
             }
-            // 缓存登录凭证token，并进入系统
-            localStorage.setItem('token', res.data.data.token);
+            
+            const token = res.data.data.token;
+            // 缓存登录凭证token
+            localStorage.setItem('token', token);
+            
+            // 从JWT token中解析用户信息
+            const userInfo = getUserInfoFromToken(token);
+            if (userInfo) {
+                console.log('登录用户信息:', userInfo);
+                // 可以根据需要存储用户信息到localStorage或context中
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+            }
+            
             navigate('/home');
         })
     };
@@ -61,6 +77,22 @@ function Login() {
             ]}>
                 <Input.Password style={{width: '200px', marginLeft: '12px'}} placeholder='请输入密码' />
             </Form.Item>
+
+            <Form.Item
+            label="角色"
+            name="role"
+            initialValue="sales"
+            rules={[
+                {
+                required: true,
+                message: '请选择您的角色!',
+                },
+            ]}>
+                <Select placeholder="请选择角色" style={{width: '200px', marginLeft: '12px'}}>
+                    <Option value="sales">商户</Option>
+                    <Option value="admin">管理员</Option>
+                </Select>
+            </Form.Item>
         
             <Form.Item name="remember" valuePropName="checked" label={null}>
                 <Checkbox>Remember me</Checkbox>
@@ -70,7 +102,9 @@ function Login() {
                 <Button type="primary" htmlType="submit" style={{marginLeft: '10px', width: '120px'}}>
                     登录
                 </Button>
-                <button>注册</button> 
+                <Button type="default" style={{marginLeft: '10px', width: '120px'}} onClick={() => navigate('/register')}>
+                    注册
+                </Button> 
             </Form.Item>
         </Form>
     );

@@ -12,23 +12,16 @@
 .user-container .card:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
-.user-container button {
+.user-container .search-bar button {
     background-color: #1677ff;
     color: white;
     border-radius: 10px;
-    width: 60px;
+    width: 100px;
     height: 30px;
     text-align: center;
     vertical-align: middle;
 }
-.user-container .delete-button {
-    background-color: red;
-    margin-left: 5px;
-}
-.user-container .delete-button:hover {
-    background-color: rgb(255, 50, 50);
-}
-.user-container button:hover {
+.user-container .search-bar button:hover {
     background-color: #3388ff;
 }
 .user-container .search-bar button {
@@ -46,27 +39,22 @@
 .user-container input[type=radio] {
     margin-left: 20px;
 }
-.user-container .modal-form input[type=text] {
-    margin: 10px 0 10px 50px;
-    width: 360px;
-    border: 1px solid rgb(211, 211, 211);
+/* 弹窗表单样式 - 与merchandise页面保持一致 */
+.modal-form .ant-form-item {
+    margin-bottom: 16px;
 }
-.user-container .modal-form input[type=number] {
-    width: 360px;
-    height: 32px;
-    border-radius: 10px;
-    padding-left: 10px; 
-    margin: 10px 0 10px 50px;
-    border: 1px solid rgb(211, 211, 211);
+
+.modal-form .ant-form-item-label > label {
+    font-weight: 500;
+    color: #262626;
 }
-.user-container .modal-form input[type=date] {
-    width: 360px;
-    height: 32px;
-    border-radius: 10px;
-    padding-left: 10px; 
-    margin: 10px 0 10px 50px;
-    border: 1px solid rgb(211, 211, 211);
+
+.modal-form .ant-input,
+.modal-form .ant-input-number,
+.modal-form .ant-select-selector {
+    border-radius: 6px;
 }
+
 .user-container .required-asterisk {
     color: red;
     margin-left: 2px;

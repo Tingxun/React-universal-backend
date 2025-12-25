@@ -53,3 +53,122 @@ export function getMenu(data) {
         data
     })
 }
+
+// 测试用API
+export function getData() {
+    return http.request({
+        url: "/health",
+        method: "get"
+    })
+}
+
+// 登陆注册API
+export function register(data) {
+    return http.request({
+        url: "/auth/register",
+        method: "post",
+        data
+    })
+}
+
+export function login(data) {
+    return http.request({
+        url: "/auth/login",
+        method: "post",
+        data
+    })
+}
+
+// 商品管理API
+export function getProductList(params) {
+    return http.request({
+        url: "/merchant/products",
+        method: "get",
+        params
+    })
+}
+
+export function getProductDetail(productId) {
+    return http.request({
+        url: `/merchant/products/${productId}`,
+        method: "get"
+    })
+}
+
+export function createProduct(data) {
+    return http.request({
+        url: "/merchant/products",
+        method: "post",
+        data
+    })
+}
+
+export function updateProduct(productId, data) {
+    return http.request({
+        url: `/merchant/products/${productId}`,
+        method: "put",
+        data
+    })
+}
+
+export function deleteProduct(productId) {
+    return http.request({
+        url: `/merchant/products/${productId}`,
+        method: "delete"
+    })
+}
+
+// 商户信息API
+export function getMerchantProfile() {
+    return http.request({
+        url: "/merchant/profile",
+        method: "get"
+    })
+}
+
+export function updateMerchantProfile(data) {
+    return http.request({
+        url: "/merchant/profile",
+        method: "put",
+        data
+    })
+}
+
+// 商户管理API（平台管理员）
+export function getMerchantList(params) {
+    return http.request({
+        url: "/api/admin/merchantslist",
+        method: "get",
+        params
+    })
+}
+
+export function createMerchant(data) {
+    return http.request({
+        url: "/api/admin/merchantscreate",
+        method: "post",
+        data
+    })
+}
+
+export function updateMerchant(data) {
+    return http.request({
+        url: `/api/admin/merchantsupdate?merchantId=${data.merchantId}`,
+        method: "put",
+        data
+    })
+}
+
+export function deleteMerchant(merchantId) {
+    return http.request({
+        url: `/api/admin/merchantsdelete?merchantId=${merchantId}`,
+        method: "delete"
+    })
+}
+
+export function getMerchantDetail(merchantId) {
+    return http.request({
+        url: `/api/admin/merchantsdetail?merchantId=${merchantId}`,
+        method: "get"
+    })
+}

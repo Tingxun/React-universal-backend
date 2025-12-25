@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import './api/mock';
+// import './api/mock';
 
 // 主入口文件
 // 挂载点，使用 React 和 ReactDOM 创建并渲染一个 React 应用的主入口部分

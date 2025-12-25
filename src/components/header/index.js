@@ -15,6 +15,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
 
   function logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
     navigate('/login');
   }
 

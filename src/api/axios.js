@@ -4,7 +4,7 @@ import axios from 'axios';
  * Axios 是一个基于 promise 的 HTTP 库，可以用于浏览器和 node.js 的开发工具
  * 主要应用于前、后端数据交互，使用Axios向服务器发送HTTP请求，并接收服务器返回的响应数据
  */
-const baseURL = '/api';
+const baseURL = 'http://10.19.205.224:8000/api';
 
 
 //axios二次封装核心思想:增强接口请求的泛用性和安全性
@@ -24,7 +24,11 @@ class HttpRequest {
     interceptors(instance) {
         // 添加请求拦截器，在每个请求发送前被调用
         instance.interceptors.request.use(function (config) {
-            // 在发送请求之前做些什么
+            // 从localStorage获取token并自动添加到请求头
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
             return config;
         }, function (error) {
             // 对请求错误做些什么

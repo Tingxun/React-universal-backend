@@ -4,7 +4,7 @@ import './tag.css'
 
 function TagComponent({navItem}){
     const navigate = useNavigate();
-    console.log('navItem:', navItem.label);
+    // console.log('navItem:', navItem.label);
     function handleClose(){
         navigate('/home');
     };

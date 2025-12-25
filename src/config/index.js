@@ -4,41 +4,47 @@ const menuList = [
         name: 'home',
         label: '首页',
         icon: 'HomeOutlined',
-        url: '/home/idnex'
+        url: '/home/index',
+        roles: ['admin', 'sales'] // 所有角色都可以访问
     },
     {
-        path: '/user',
-        name: 'user',
-        label: '用户管理',
+        path: '/sales',
+        name: 'sales',
+        label: '商户管理',
         icon: 'UserOutlined',
-        url: '/user/idnex'
+        url: '/sales/index',
+        roles: ['admin'] // 只有管理员可以访问
     },
     {
-        path: '/mall',
-        name: 'mall',
+        path: '/merchandise',
+        name: 'merchandise',
         label: '商品管理',
         icon: 'ShoppingOutlined',
-        url: '/mall/idnex'
+        url: '/merchandise/index',
+        roles: ['admin', 'sales'] // 所有角色都可以访问
     },
     {
         path: '/other',
         name: 'other',
         label: '其他管理',
         icon: 'SettingOutlined',
+        roles: ['admin', 'sales'], // 所有角色都可以访问
         children: [
             {
                 path: '/other/pageOne',
                 name: 'pageOne',
                 label: '页面1',
                 icon: 'HomeOutlined',
-                url: '/other/pageOne'
+                url: '/other/pageOne',
+                roles: ['admin', 'sales']
             },
             {
                 path: '/other/pageTwo',
                 name: 'pageTwo',
                 label: '页面2',
                 icon: 'HomeOutlined',
-                url: '/other/pageTwo'
+                url: '/other/pageTwo',
+                roles: ['admin', 'sales']
             }
             
         ]
