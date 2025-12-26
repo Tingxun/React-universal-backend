@@ -6,7 +6,7 @@ import { Layout } from 'antd';
 import AsideComponent from '../components/aside';
 import HeaderComponent from '../components/header';
 import TagComponent from '../components/tag';
-import RouterAuth from '../router/routerAuth';
+import RouteGuard from '../router/RouteGuard';
 
 const { Content } = Layout;
 
@@ -15,7 +15,7 @@ function Main (){
     const [navItem, setNavItem] = useState({});
 
     return (
-        <RouterAuth>
+        <RouteGuard>
             <Layout className='main-container'>
             <AsideComponent collapsed={collapsed} setNavItem={setNavItem} />
             <Layout>
@@ -34,7 +34,7 @@ function Main (){
                 </Content>
             </Layout>
         </Layout>
-        </RouterAuth>
+        </RouteGuard>
     );
 }
 

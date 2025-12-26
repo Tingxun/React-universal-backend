@@ -1,5 +1,5 @@
 import * as echarts from 'echarts';
-import '../../pages/home/home.css'
+import './echarts.css'
 import { useEffect, useRef, useState, useCallback} from 'react';
 
 // echarts的配置数据

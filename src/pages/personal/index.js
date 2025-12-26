@@ -3,7 +3,7 @@ import { Table } from 'antd';
 import * as Icon from '@ant-design/icons';
 import Echarts from '../../components/echarts';
 import { getHomeData } from '../../api/index';  
-import './home.css';
+import './personal.css';
 
 const tableColumns = [
     {

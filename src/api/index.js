@@ -251,3 +251,44 @@ export function getMerchantFinanceStatistics(params) {
         params
     })
 }
+
+// 平台管理员统计API
+export function getAdminTotalStatistics(params) {
+    return http.request({
+        url: "/api/admin/total",
+        method: "get",
+        params
+    })
+}
+
+export function getAdminDailyReport(params) {
+    return http.request({
+        url: "/api/admin/daily-report",
+        method: "get",
+        params
+    })
+}
+
+export function getAdminGrowthStatistics(params) {
+    return http.request({
+        url: "/api/admin/growth",
+        method: "get",
+        params
+    })
+}
+
+export function getAdminCategoryDistribution(params) {
+    return http.request({
+        url: "/api/admin/distribution",
+        method: "get",
+        params
+    })
+}
+
+export function getAdminMerchantRanking(params) {
+    return http.request({
+        url: "/api/admin/ranking",
+        method: "get",
+        params
+    })
+}
