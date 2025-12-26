@@ -200,3 +200,13 @@ export function getCategorySalesStatistics(params) {
         params
     })
 }
+
+// 商品分类统计API（管理员视角）
+// 请求参数: startDate(开始日期), endDate(结束日期)
+export function getCategoryDistribution(params) {
+    return http.request({
+        url: "/api/admin/distribution",
+        method: "get",
+        params
+    })
+}

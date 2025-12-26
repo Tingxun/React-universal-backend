@@ -24,9 +24,11 @@ import {
     DeleteOutlined,
     FilterOutlined,
     BarChartOutlined,
-    LineChartOutlined
+    LineChartOutlined,
+    PieChartOutlined
 } from '@ant-design/icons';
-import { getProductList, deleteProduct, createProduct, updateProduct, getMerchantRanking, getCategorySalesStatistics } from '../../api/index';
+import { getProductList, deleteProduct, createProduct, updateProduct,
+     getMerchantRanking, getCategorySalesStatistics, getCategoryDistribution } from '../../api/index';
 import { getCurrentUser } from '../../utils/jwt';
 import { useNavigate } from 'react-router-dom';
 import './merchandise.css';
@@ -92,6 +94,7 @@ function Merchandise() {
     // 图表数据状态
     const [merchantRankingData, setMerchantRankingData] = useState({});
     const [productSalesData, setProductSalesData] = useState({});
+    const [categoryDistributionData, setCategoryDistributionData] = useState({});
 
     // 获取用户角色
     useEffect(() => {
@@ -147,6 +150,45 @@ function Merchandise() {
         } catch (error) {
             console.error('获取商户排行数据失败:', error);
             message.error('获取商户排行数据失败');
+        } finally {
+            setChartLoading(false);
+        }
+    }, [userRole]);
+
+    // 获取商品分类统计饼状图数据（管理员视角）
+    const fetchCategoryDistribution = useCallback(async () => {
+        if (userRole !== 'admin') return;
+        
+        setChartLoading(true);
+        try {
+            const res = await getCategoryDistribution({
+                startDate: '2024-01-01',
+                endDate: '2024-12-31'
+            });
+            console.log('获取商品分类统计数据成功:', res || []);
+            
+            if (res.data.code === 20000) {
+                const data = res.data.data;
+                
+                // 转换数据为饼状图格式
+                const chartData = {
+                    series: data.categoryStats?.map((item, index) => ({
+                        name: item.category,
+                        value: item.salesAmount || item.productCount,
+                        itemStyle: {
+                            color: ['#1890ff', '#52c41a', '#faad14', '#f5222d', '#722ed1', 
+                                   '#fa541c', '#13c2c2', '#eb2f96', '#f759ab', '#9254de'][index % 10]
+                        }
+                    })) || []
+                };
+                // console.log('转换后的饼状图数据:', chartData);
+                setCategoryDistributionData(chartData);
+            } else {
+                message.error(res.data.message || '获取商品分类统计数据失败');
+            }
+        } catch (error) {
+            console.error('获取商品分类统计数据失败:', error);
+            message.error('获取商品分类统计数据失败');
         } finally {
             setChartLoading(false);
         }
@@ -258,11 +300,12 @@ function Merchandise() {
             fetchAllProducts();
             if (userRole === 'admin') {
                 fetchMerchantRanking();
+                fetchCategoryDistribution();
             } else {
                 fetchProductSalesStatistics();
             }
         }
-    }, [userRole, fetchAllProducts, fetchMerchantRanking, fetchProductSalesStatistics]);
+    }, [userRole, fetchAllProducts, fetchMerchantRanking, fetchCategoryDistribution, fetchProductSalesStatistics]);
 
     // 更新分页总数
     useEffect(() => {
@@ -550,40 +593,48 @@ function Merchandise() {
 
     return (
         <div className="mall-container">
-            <Card 
-                title={
-                    <div className="mall-header">
-                        <Tag color={userRole === 'admin' ? 'blue' : 'green'}>
-                            {userRole === 'admin' ? '管理员模式' : '商户模式'}
-                        </Tag>
-                    </div>
-                }
-                extra={
-                    <Button type="primary" icon={<PlusOutlined />} onClick={() => handleEdit('add')}>
-                        新增商品
-                    </Button>
-                }
-            >
+            <Card>
                 {/* 图表区域 */}
                 <div className="chart-area">
                     <Spin spinning={chartLoading}>
                         {userRole === 'admin' ? (
-                            <Card 
-                                title={
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <BarChartOutlined />
-                                        <span>商户销售排行</span>
-                                    </div>
-                                }
-                                style={{ marginBottom: '16px' }}
-                            >
-                                <Echarts 
-                                    style={{ width: '100%', height: '400px' }}
-                                    chartData={merchantRankingData}
-                                    isAxisChart={true}
-                                    chartType="bar"
-                                />
-                            </Card>
+                            <Row gutter={16}>
+                                <Col span={12}>
+                                    <Card 
+                                        title={
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <BarChartOutlined />
+                                                <span>商户销售排行</span>
+                                            </div>
+                                        }
+                                        style={{ marginBottom: '2px' }}
+                                    >
+                                        <Echarts 
+                                            style={{ width: '100%', height: '300px' }}
+                                            chartData={merchantRankingData}
+                                            isAxisChart={true}
+                                            chartType="bar"
+                                        />
+                                    </Card>
+                                </Col>
+                                <Col span={12}>
+                                    <Card 
+                                        title={
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <PieChartOutlined />
+                                                <span>商品分类销量占比</span>
+                                            </div>
+                                        }
+                                        style={{ marginBottom: '2px' }}
+                                    >
+                                        <Echarts 
+                                            style={{ width: '100%', height: '300px' }}
+                                            chartData={categoryDistributionData}
+                                            isAxisChart={false}
+                                        />
+                                    </Card>
+                                </Col>
+                            </Row>
                         ) : (
                             <Card 
                                 title={
@@ -592,10 +643,10 @@ function Merchandise() {
                                         <span>商品类别销售趋势</span>
                                     </div>
                                 }
-                                style={{ marginBottom: '16px' }}
+                                style={{ marginBottom: '2px' }}
                             >
                                 <Echarts 
-                                    style={{ width: '100%', height: '400px' }}
+                                    style={{ width: '100%', height: '300px' }}
                                     chartData={productSalesData}
                                     isAxisChart={true}
                                     chartType="line"
@@ -607,29 +658,38 @@ function Merchandise() {
 
                 {/* 搜索区域 */}
                 <div className="search-area">
-                    <Row gutter={[16, 16]} align="middle">
-                        <Col xs={24} sm={12} md={8} lg={6}>
-                            <ProductSearch
-                                placeholder="输入商品名称搜索"
-                                onSearch={handleSearch}
-                                allowClear={true}
-                            />
+                    <Row gutter={[16, 16]} align="middle" justify="space-between">
+                        <Col>
+                            <Row gutter={[16, 16]} align="middle">
+                                <Col xs={24} sm={12} md={8} lg={6}>
+                                    <ProductSearch
+                                        placeholder="输入商品名称搜索"
+                                        onSearch={handleSearch}
+                                        allowClear={true}
+                                    />
+                                </Col>
+                                <Col xs={24} sm={12} md={8} lg={6}>
+                                    <Button 
+                                        icon={<FilterOutlined />}
+                                        onClick={() => {
+                                            setSearchParams({
+                                                searchKeyword: '',
+                                                category: '',
+                                                status: '',
+                                                sortField: 'createTime',
+                                                sortOrder: 'desc'
+                                            });
+                                            setPagination(prev => ({...prev, current: 1}));
+                                        }}
+                                    >
+                                        重置筛选
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Col>
-                        <Col xs={24} sm={12} md={8} lg={6}>
-                            <Button 
-                                icon={<FilterOutlined />}
-                                onClick={() => {
-                                    setSearchParams({
-                                        searchKeyword: '',
-                                        category: '',
-                                        status: '',
-                                        sortField: 'createTime',
-                                        sortOrder: 'desc'
-                                    });
-                                    setPagination(prev => ({...prev, current: 1}));
-                                }}
-                            >
-                                重置筛选
+                        <Col>
+                            <Button type="primary" icon={<PlusOutlined />} onClick={() => handleEdit('add')}>
+                                新增商品
                             </Button>
                         </Col>
                     </Row>

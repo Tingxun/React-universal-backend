@@ -3,41 +3,6 @@ import '../../pages/home/home.css'
 import { useEffect, useRef, useState, useCallback} from 'react';
 
 // echarts的配置数据
-const axisOption = {
-    textStyle: {
-        color: '#333',
-    },
-    tooltip: {
-        trigger: 'axis',
-    },
-    title: {
-        text: null,
-    },
-    xAxis: {
-        type: 'category',
-        data: [],
-        axisLine: {
-            lineStyle: {
-                color: '#17b3a3',
-            },
-        },
-        axisLabel: {
-            interval: 0,
-            color: '#333',
-        },
-    },
-    yAxis: {
-        type: 'value',
-        axisLine: {
-            lineStyle: {
-                color: '#17b3a3',
-            },
-        },
-    },
-    color: ['#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80', '#8d98b3'],
-    series: [],
-}
-
 const normalOption = {
     tooltip: {
         trigger: 'item',
@@ -143,7 +108,7 @@ function Echarts({style, chartData, isAxisChart = true, chartType = 'bar'}) {
                     left: '1%',
                     right: '1%',
                     bottom: chartType === 'bar' ? '15%' : '3%',
-                    top: '10%',
+                    top: '20%',
                     containLabel: true
                 },
                 xAxis: {
@@ -215,8 +180,19 @@ function Echarts({style, chartData, isAxisChart = true, chartType = 'bar'}) {
             };
             option = axisOption;
         } else {
-            normalOption.series = chartData.series;
-            option = normalOption;
+            // 饼状图配置
+            option = {
+                ...normalOption,
+                series: [{
+                    ...normalOption.series[0],
+                    type: 'pie',
+                    data: chartData.series || [],
+                    label: {
+                        show: true,
+                        formatter: '{b}: {c} ({d}%)'
+                    }
+                }]
+            };
         }
         echartObj.current.setOption(option);
         
