@@ -71,16 +71,58 @@ function Echarts({style, chartData, isAxisChart = true, chartType = 'bar'}) {
         };
     }, [handleResize]);
 
+    // 组件卸载时清理ECharts实例
+    useEffect(() => {
+        return () => {
+            if (echartObj.current && !echartObj.current.isDisposed()) {
+                echartObj.current.dispose();
+                echartObj.current = null;
+            }
+        };
+    }, []);
+
     // 图表初始化和更新
     useEffect(() => {
+        // 检查DOM元素是否存在
+        if (!echartRef.current) return;
+        
         let option;
         // 初始化或重新初始化echarts
         if (!echartObj.current) {
             echartObj.current = echarts.init(echartRef.current);
         }
         
-        // 设置option
-        if (isAxisChart) {
+        // 设置option - 如果chartData已经包含完整的配置，直接使用
+        if (chartData && chartData.xAxis && chartData.yAxis && chartData.series) {
+            // 使用传入的完整配置
+            option = {
+                textStyle: {
+                    color: '#333',
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: chartData.series?.map(item => item.name) || [],
+                    textStyle: {
+                        color: '#333'
+                    }
+                },
+                grid: {
+                    left: '1%',
+                    right: '1%',
+                    bottom: '15%',
+                    top: '20%',
+                    containLabel: true
+                },
+                color: ['#1890ff', '#52c41a', '#faad14', '#f5222d', '#722ed1', '#fa541c', '#13c2c2', '#eb2f96', '#f759ab', '#9254de'],
+                ...chartData
+            };
+        } else if (isAxisChart) {
+            // 向后兼容：使用原有的单y轴配置
             const axisOption = {
                 textStyle: {
                     color: '#333',
@@ -194,10 +236,14 @@ function Echarts({style, chartData, isAxisChart = true, chartType = 'bar'}) {
                 }]
             };
         }
-        echartObj.current.setOption(option);
         
-        // 图表重绘
-        echartObj.current.resize();
+        // 使用requestAnimationFrame避免在渲染过程中调用
+        requestAnimationFrame(() => {
+            if (echartObj.current && !echartObj.current.isDisposed()) {
+                echartObj.current.setOption(option);
+                echartObj.current.resize();
+            }
+        });
     }, [chartData, isAxisChart, chartType, windowSize]);
     return (
         <div style={style} ref={echartRef}>

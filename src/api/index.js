@@ -210,3 +210,44 @@ export function getCategoryDistribution(params) {
         params
     })
 }
+
+// 商户统计API - 新增接口
+export function getMerchantOverviewStatistics(params) {
+    return http.request({
+        url: "/api/merchant/statistics/overview",
+        method: "get",
+        params
+    })
+}
+
+export function getMerchantInventoryStatistics(params) {
+    return http.request({
+        url: "/api/merchant/statistics/inventory",
+        method: "get",
+        params
+    })
+}
+
+export function getMerchantSalesTrendStatistics(params) {
+    return http.request({
+        url: "/api/merchant/statistics/sales-trend",
+        method: "get",
+        params
+    })
+}
+
+export function getMerchantProductRankingStatistics(params) {
+    return http.request({
+        url: "/api/merchant/statistics/product-ranking",
+        method: "get",
+        params
+    })
+}
+
+export function getMerchantFinanceStatistics(params) {
+    return http.request({
+        url: "/api/merchant/statistics/finance",
+        method: "get",
+        params
+    })
+}

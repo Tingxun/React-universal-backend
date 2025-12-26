@@ -1,0 +1,228 @@
+.dashboard-container {
+    padding: 24px;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.dashboard-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 8px;
+}
+
+.dashboard-header p {
+    font-size: 14px;
+    color: #8c8c8c;
+    margin: 0;
+}
+
+.dashboard-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.dashboard-card .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 16px 20px;
+}
+
+.dashboard-card .ant-card-head-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.dashboard-card .ant-card-body {
+    padding: 20px;
+}
+
+/* 统计卡片样式 */
+.dashboard-card .ant-statistic {
+    text-align: center;
+}
+
+.dashboard-card .ant-statistic-title {
+    font-size: 14px;
+    color: #8c8c8c;
+    margin-bottom: 8px;
+}
+
+.dashboard-card .ant-statistic-content {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.dashboard-card .ant-statistic-content-value {
+    font-size: 24px;
+}
+
+/* 进度条样式 */
+.dashboard-card .ant-progress-circle {
+    margin: 0 auto;
+}
+
+.dashboard-card .ant-progress-text {
+    font-size: 14px !important;
+    font-weight: 600;
+}
+
+/* 表格样式 */
+.dashboard-card .ant-table {
+    font-size: 13px;
+}
+
+.dashboard-card .ant-table-thead > tr > th {
+    background-color: #fafafa;
+    font-weight: 600;
+    color: #262626;
+    padding: 8px 12px;
+}
+
+.dashboard-card .ant-table-tbody > tr > td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dashboard-card .ant-table-tbody > tr:hover > td {
+    background-color: #f5f5f5;
+}
+
+/* 标签样式 */
+.dashboard-card .ant-tag {
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 16px;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 24px;
+    }
+    
+    .dashboard-card .ant-statistic-content {
+        font-size: 20px;
+    }
+    
+    .dashboard-card .ant-card-body {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-container {
+        padding: 12px;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 20px;
+    }
+    
+    .dashboard-card .ant-statistic-content {
+        font-size: 18px;
+    }
+}
+
+/* 图表容器样式 */
+.dashboard-card .echarts-container {
+    width: 100%;
+    height: 300px;
+}
+
+/* 预警信息样式 */
+.inventory-alert {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.inventory-alert.low-stock {
+    background-color: #fff7e6;
+    border-left: 3px solid #faad14;
+}
+
+.inventory-alert.out-of-stock {
+    background-color: #fff1f0;
+    border-left: 3px solid #ff4d4f;
+}
+
+/* 财务统计样式 */
+.finance-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.finance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.finance-item:last-child {
+    border-bottom: none;
+}
+
+.finance-item .label {
+    font-size: 14px;
+    color: #595959;
+}
+
+.finance-item .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.finance-item.total {
+    font-weight: 600;
+    background-color: #fafafa;
+    margin: 0 -20px;
+    padding: 12px 20px;
+}
+
+/* 加载状态样式 */
+.dashboard-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+/* 空状态样式 */
+.dashboard-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8c8c8c;
+}
+
+.dashboard-empty .anticon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: #d9d9d9;
+}
