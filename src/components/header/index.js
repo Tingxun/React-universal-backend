@@ -19,10 +19,6 @@ function HeaderComponent({collapsed, setCollapsed}) {
     navigate('/login');
   }
 
-  function goToPersonalCenter() {
-    navigate('/personal');
-  }
-
   // 从本地存储获取用户信息
   const getUserFromLocalStorage = () => {
     try {
@@ -49,9 +45,8 @@ function HeaderComponent({collapsed, setCollapsed}) {
         },
         {
           key: '2',
-          label: '个人中心',
-          extra: '⌘P',
-          onClick: goToPersonalCenter,
+          label: '设置',
+          extra: '⌘S',
         },
         {
           type: 'divider',
@@ -59,7 +54,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
         {
           key: '3',
           label: '登出',
-          extra: '⌘Q',
+          extra: '⌘L',
           onClick: logout,
         },
       ];

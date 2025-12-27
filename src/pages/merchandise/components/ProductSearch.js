@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { Input, Button } from 'antd';
-import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import './ProductSearch.css';
 
 const ProductSearch = ({ 
@@ -32,7 +30,8 @@ const ProductSearch = ({
     return (
         <div className="product-search-container">
             <div className="product-search-input-wrapper">
-                <Input
+                <input
+                    type="text"
                     placeholder={placeholder}
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
@@ -41,19 +40,21 @@ const ProductSearch = ({
                 />
                 <div className="product-search-buttons">
                     {allowClear && searchValue && (
-                        <Button
-                            type="text"
-                            icon={<CloseOutlined />}
+                        <button
+                            type="button"
                             onClick={handleClear}
                             className="product-search-clear-btn"
-                        />
+                        >
+                            ×
+                        </button>
                     )}
-                    <Button
-                        type="primary"
-                        icon={<SearchOutlined />}
+                    <button
+                        type="button"
                         onClick={handleSearch}
                         className="product-search-btn"
-                    />
+                    >
+                        🔍
+                    </button>
                 </div>
             </div>
         </div>

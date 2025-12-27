@@ -52,6 +52,7 @@ function PersonalCenter() {
 
     // 打开编辑模态框
     const handleEdit = () => {
+        console.log('userInfo:', userInfo);
         if (userInfo) {
             form.setFieldsValue({
                 name: userInfo.name,
@@ -97,11 +98,11 @@ function PersonalCenter() {
             setLoading(false);
             
             // 如果用户有ID，尝试从API获取更详细的信息
-            if (localUserInfo.id) {
-                getUserProfile(localUserInfo.id).then(({data}) => {
-                    if (data.code === 20000) {
-                        console.log('获取用户详情成功:', data.data.user || {});
-                        setUserInfo(data.data.user);
+            if (localUserInfo.userId) {
+                getUserProfile(localUserInfo.userId).then((res) => {
+                    console.log('获取用户详情成功:', res);
+                    if (res.data.code === 20000) {
+                        setUserInfo(res.data.data.user);
                     }
                 }).catch(error => {
                     console.error('获取用户详情失败:', error);
@@ -150,18 +151,10 @@ function PersonalCenter() {
                                 </div>
                             </div>
                             <div className='login-info'>
-                                <Row gutter={16}>
-                                    <Col span={12}>
-                                        <Statistic title="邮箱" value={userInfo?.email || '未设置'} />
-                                    </Col>
-                                    <Col span={12}>
-                                        <Statistic title="电话" value={userInfo?.phone || '未设置'} />
-                                    </Col>
-                                </Row>
-                                <div style={{marginTop: '16px'}}>
-                                    <p>上次登录时间: <span>{userInfo?.lastLoginAt ? new Date(userInfo.lastLoginAt).toLocaleString() : '未知'}</span></p>
-                                    <p>注册时间: <span>{userInfo?.createdAt ? new Date(userInfo.createdAt).toLocaleDateString() : '未知'}</span></p>
-                                </div>
+                                <p>邮箱: <span>{userInfo?.email || '未设置'}</span></p>
+                                <p>电话: <span>{userInfo?.phone || '未设置'}</span></p>
+                                <p>上次登录时间: <span>{userInfo?.lastLoginAt ? new Date(userInfo.lastLoginAt).toLocaleString() : '未知'}</span></p>
+                                <p>注册时间: <span>{userInfo?.createdAt ? new Date(userInfo.createdAt).toLocaleDateString() : '未知'}</span></p>
                                 <div style={{marginTop: '24px', textAlign: 'center'}}>
                                     <Button type="primary" onClick={handleEdit} size="large">
                                         编辑个人信息

@@ -6,7 +6,6 @@
 .flex-container {
   display: flex;
   flex-wrap: wrap;
-  padding: 24px;
   gap: 24px;
   min-height: calc(100vh - 64px - 32px);
   background-color: #f5f5f5;
@@ -71,6 +70,16 @@
   margin: 8px 0;
   font-size: 14px;
   color: #8c8c8c;
+}
+
+.login-info .ant-statistic .ant-statistic-title {
+  font-size: 14px;
+  color: #8c8c8c;
+}
+
+.login-info .ant-statistic .ant-statistic-content {
+  font-size: 14px;
+  color: #262626;
 }
 
 .login-info p span {

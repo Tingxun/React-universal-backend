@@ -292,7 +292,7 @@ function Merchandise() {
         const startIndex = (pagination.current - 1) * pagination.pageSize;
         const endIndex = startIndex + pagination.pageSize;
         return filteredProducts.slice(startIndex, endIndex);
-    }, [filteredProducts, pagination.current, pagination.pageSize]);
+    }, [filteredProducts, pagination]);
 
     // 初始化加载
     useEffect(() => {
@@ -659,16 +659,16 @@ function Merchandise() {
                 {/* 搜索区域 */}
                 <div className="search-area">
                     <Row gutter={[16, 16]} align="middle" justify="space-between">
-                        <Col>
+                        <Col flex="auto">
                             <Row gutter={[16, 16]} align="middle">
-                                <Col xs={24} sm={12} md={8} lg={6}>
+                                <Col xs={24} sm={16} md={12} lg={10} xl={8}>
                                     <ProductSearch
                                         placeholder="输入商品名称搜索"
                                         onSearch={handleSearch}
                                         allowClear={true}
                                     />
                                 </Col>
-                                <Col xs={24} sm={12} md={8} lg={6}>
+                                <Col xs={24} sm={8} md={6} lg={4}>
                                     <Button 
                                         icon={<FilterOutlined />}
                                         onClick={() => {
