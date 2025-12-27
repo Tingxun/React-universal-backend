@@ -1,70 +1,193 @@
-# Getting Started with Create React App
+# Universal Backend 管理系统
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目简介
 
-## Available Scripts
+Universal Backend 是一个基于 React 19 的企业级后台管理系统，采用现代化的前端技术栈构建，提供完善的用户管理、权限控制、数据可视化等功能。
 
-In the project directory, you can run:
+## 技术栈
 
-### `npm start`
+- **前端框架**: React 19.0.0
+- **路由管理**: React Router DOM 7.2.0
+- **UI组件库**: Ant Design 6.1.2
+- **HTTP请求**: Axios 1.7.9
+- **数据可视化**: ECharts 5.6.0
+- **构建工具**: Create React App
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 功能特性
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 🔐 用户认证与权限管理
+- 基于 JWT 的登录认证
+- 角色权限控制（管理员、商户、销售）
+- 路由级权限守卫
+- 动态菜单权限过滤
 
-### `npm test`
+### 📊 数据可视化仪表盘
+- 管理员仪表盘：系统概览、商户统计
+- 商户仪表盘：个人业绩、销售数据
+- 实时数据图表展示
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🏪 商户管理
+- 商户信息增删改查
+- 商户状态管理（活跃/停用/审核中）
+- 联系人信息管理
 
-### `npm run build`
+### 🛍️ 商品管理
+- 商品列表与分类管理
+- 商品搜索与筛选
+- 销售统计与分析
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 👤 个人中心
+- 个人信息展示与编辑
+- 业绩统计与目标完成度
+- 操作记录追踪
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 项目结构
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+src/
+├── api/                    # API接口管理
+│   ├── axios.js           # Axios二次封装
+│   └── index.js           # API接口定义
+├── assets/                 # 静态资源
+├── components/             # 公共组件
+│   ├── aside/             # 侧边栏
+│   ├── echarts/           # 图表组件
+│   ├── header/            # 顶部导航
+│   └── tag/               # 标签页
+├── config/                 # 配置文件
+├── pages/                  # 页面组件
+│   ├── home/              # 首页
+│   ├── login/             # 登录页
+│   ├── register/          # 注册页
+│   ├── personal/          # 个人中心
+│   ├── sales/             # 商户管理
+│   ├── merchandise/       # 商品管理
+│   └── other/             # 其他页面
+├── router/                 # 路由配置
+├── utils/                  # 工具函数
+└── App.js                  # 应用入口
+```
 
-### `npm run eject`
+## 快速开始
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 环境要求
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Node.js >= 14.0.0
+- npm >= 6.0.0
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 安装依赖
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm install
+```
 
-## Learn More
+### 启动开发服务器
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm start
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+应用将在 [http://localhost:3000](http://localhost:3000) 启动
 
-### Code Splitting
+### 构建生产版本
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+npm run build
+```
 
-### Analyzing the Bundle Size
+构建文件将生成在 `build` 目录中
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 运行测试
 
-### Making a Progressive Web App
+```bash
+npm test
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 配置说明
 
-### Advanced Configuration
+### API 配置
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+在 `src/api/axios.js` 中配置后端 API 地址：
 
-### Deployment
+```javascript
+const baseURL = 'http://your-api-server.com/api';
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 菜单配置
 
-### `npm run build` fails to minify
+在 `src/config/index.js` 中配置系统菜单：
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```javascript
+const menuList = [
+  {
+    path: '/home',
+    name: 'home',
+    label: '首页',
+    icon: 'HomeOutlined',
+    roles: ['admin', 'sales']
+  },
+  // ... 更多菜单项
+];
+```
+
+## 用户角色说明
+
+### 管理员 (admin)
+- 系统最高权限
+- 管理所有商户和商品
+- 查看系统统计数据
+- 配置系统参数
+
+### 商户 (merchant)
+- 管理自有商品
+- 查看销售数据
+- 管理客户信息
+
+### 销售 (sales)
+- 查看分配的商品
+- 管理销售订单
+- 查看个人业绩
+
+## 开发指南
+
+### 添加新页面
+
+1. 在 `src/pages` 目录下创建新页面组件
+2. 在 `src/router/index.js` 中添加路由配置
+3. 在 `src/config/index.js` 中添加菜单项（如需要）
+
+### 添加新 API
+
+1. 在 `src/api/index.js` 中定义新的 API 接口
+2. 在页面组件中导入并使用
+
+### 样式开发
+
+- 使用模块化 CSS，每个组件对应独立的 CSS 文件
+- 遵循 Ant Design 设计规范
+- 支持响应式布局
+
+## 部署说明
+
+### 开发环境部署
+
+1. 确保后端 API 服务正常运行
+2. 配置正确的 API 地址
+3. 运行 `npm start` 启动开发服务器
+
+### 生产环境部署
+
+1. 运行 `npm run build` 构建生产版本
+2. 将 `build` 目录部署到 Web 服务器
+3. 配置服务器支持 SPA 路由
+
+## 常见问题
+
+### Q: 登录后页面空白？
+A: 检查后端 API 服务是否正常，确认 API 地址配置正确
+
+### Q: 菜单权限不生效？
+A: 检查用户角色配置，确认菜单项的 roles 属性设置正确
+
+### Q: 图表无法显示？
+A: 确认 ECharts 依赖已正确安装，检查图表数据格式
