@@ -119,7 +119,7 @@ function User() {
     // 获取商户数据
     function getMerchantData() {
         getMerchantList().then((res) => {
-            console.log('获取商户列表成功:', res.data.data.list || []);
+            // console.log('获取商户列表成功:', res.data.data.list || []);
             const { list } = res.data.data || {};
             const tableData = (list || []).map((item) => {
                 return {

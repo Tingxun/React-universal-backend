@@ -9,14 +9,14 @@ import {
     FallOutlined,
     ExclamationCircleOutlined
 } from '@ant-design/icons';
-import Echarts from '../../components/echarts';
+import Echarts from '../../../components/echarts';
 import { 
     getMerchantOverviewStatistics,
     getMerchantInventoryStatistics,
     getMerchantSalesTrendStatistics,
     getMerchantProductRankingStatistics,
     getMerchantFinanceStatistics
-} from '../../api/index';
+} from '../../../api/index';
 import './dashboard.css';
 
 const Dashboard = () => {

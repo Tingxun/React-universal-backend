@@ -1,211 +1,271 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
-import * as Icon from '@ant-design/icons';
-import Echarts from '../../components/echarts';
-import { getHomeData } from '../../api/index';  
+import { Layout, Card, Row, Col, Statistic, Avatar, Tag, Button, Modal, Form, Input, message } from 'antd';
+// import * as Icon from '@ant-design/icons';
+import { getUserProfile, updateUserProfile } from '../../api/index';  
 import './personal.css';
 
-const tableColumns = [
-    {
-        title: '品牌',
-        dataIndex: 'name'
-    },
-    {
-        title: '今日购买',
-        dataIndex: 'todayBuy'
-    },
-    {
-        title: '本月购买',
-        dataIndex: 'monthBuy'
-    },
-    {
-        title: '总购买',
-        dataIndex: 'totalBuy'
-    }
-]
+const { Content } = Layout;
 
-const countData = [
-    {
-        name: '今日支付订单',
-        value: 1234,
-        icon: 'CheckCircleOutlined',
-        color: '#2ec7c9'
-    },
-    {
-        name: '今日收藏订单',
-        value: 1234,
-        icon: 'ClockCircleOutlined',
-        color: '#ffb980'
-    },
-    {
-        name: '今日未支付订单',
-        value: 1234,
-        icon: 'CloseCircleOutlined',
-        color: '#5ab1ef'
-    },
-    {
-        name: '本月支付订单',
-        value: 1234,
-        icon: 'CheckCircleOutlined',
-        color: '#2ec7c9'
-    },
-    {
-        name: '本月收藏订单',
-        value: 1234,
-        icon: 'ClockCircleOutlined',
-        color: '#ffb980'
-    },
-    {
-        name: '本月未支付订单',
-        value: 1234,
-        icon: 'CloseCircleOutlined',
-        color: '#5ab1ef'
-    }
-]
 // 动态获取icon，处理菜单数据
-const iconToElement = (name) => React.createElement(Icon[name]);
-function Home() {
-    const [tableData, setTableData] = useState([]);
-    const [ echartData, setEchartData ] = useState({});
+// const iconToElement = (name) => React.createElement(Icon[name]);
+
+function PersonalCenter() {
+    const [userInfo, setUserInfo] = useState(null);
+    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [form] = Form.useForm();
 
     const userImg = require('../../assets/images/shadow4.jpg');
-    // 页面初次渲染完成后请求加载数据
-    // React严格模式下组件渲染一次，Effect执行一次会导致下列请求被调用两次
-    useEffect(() => {
-        // 通过api获取数据
-        getHomeData().then(({data}) => {
-            // 打印数据
-            // console.log(data, 'res');
-            // 解构数据
-            const {tableData, orderData, videoData, userData} = data.data;
-            // 设置表格数据
-            setTableData(tableData);
-            // 重组订单数据
-            const order = orderData;
-            const xAxis = order.date;
-            const keyArray = Object.keys(order.data[0]);
-            let orderSeries = [];
-            keyArray.forEach((key) => {
-                orderSeries.push({
-                    name: key,
-                    data: order.data.map(item => item[key]),
-                    type: 'line'
-                });
+
+    // 从本地存储获取用户信息
+    const getUserFromLocalStorage = () => {
+        try {
+            const userInfoStr = localStorage.getItem('userInfo');
+            if (userInfoStr) {
+                return JSON.parse(userInfoStr);
+            }
+        } catch (error) {
+            console.error('解析用户信息失败:', error);
+        }
+        return null;
+    };
+
+    // 获取角色显示文本
+    const getRoleText = (role) => {
+        switch (role) {
+            case 'admin': return '管理员';
+            case 'merchant': return '商户';
+            case 'sales': return '销售';
+            default: return '用户';
+        }
+    };
+
+    // 获取角色颜色
+    const getRoleColor = (role) => {
+        switch (role) {
+            case 'admin': return 'red';
+            case 'merchant': return 'blue';
+            case 'sales': return 'green';
+            default: return 'default';
+        }
+    };
+
+    // 打开编辑模态框
+    const handleEdit = () => {
+        if (userInfo) {
+            form.setFieldsValue({
+                name: userInfo.name,
+                email: userInfo.email,
+                phone: userInfo.phone,
+                department: userInfo.department
             });
-            setEchartData({
-                order: {
-                    xAxis,
-                    series: orderSeries
-                },
-                user: {
-                    xAxis: userData.map(item => item.date),
-                    series: [
-                        {
-                            name: '活跃用户',
-                            data: userData.map(item => item.active),
-                            type: 'bar'
-                        },
-                        {
-                            name: '新增用户',
-                            data: userData.map(item => item.new),
-                            type: 'bar'
-                        }
-                    ]
-                },
-                video: {
-                    series: [
-                        {
-                            name: '视频播放量',
-                            data: videoData,
-                            type: 'pie'
-                        }
-                    ]
+            setEditModalVisible(true);
+        }
+    };
+
+    // 提交编辑信息
+    const handleEditSubmit = async (values) => {
+        try {
+            if (userInfo?.id) {
+                const { data } = await updateUserProfile(userInfo.id, values);
+                if (data.code === 20000) {
+                    message.success('个人信息更新成功');
+                    setUserInfo(data.data);
+                    setEditModalVisible(false);
+                    
+                    // 更新本地存储的用户信息
+                    const localUserInfo = getUserFromLocalStorage();
+                    if (localUserInfo) {
+                        const updatedUserInfo = { ...localUserInfo, ...data.data };
+                        localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+                    }
+                } else {
+                    message.error(data.message || '更新失败');
                 }
+            }
+        } catch (error) {
+            console.error('更新个人信息失败:', error);
+            message.error('更新失败，请重试');
+        }
+    };
+
+    useEffect(() => {
+        // 从本地存储获取用户信息
+        const localUserInfo = getUserFromLocalStorage();
+        if (localUserInfo) {
+            setUserInfo(localUserInfo);
+            setLoading(false);
+            
+            // 如果用户有ID，尝试从API获取更详细的信息
+            if (localUserInfo.id) {
+                getUserProfile(localUserInfo.id).then(({data}) => {
+                    if (data.code === 20000) {
+                        console.log('获取用户详情成功:', data.data.user || {});
+                        setUserInfo(data.data.user);
+                    }
+                }).catch(error => {
+                    console.error('获取用户详情失败:', error);
+                }).finally(() => {
+                    setLoading(false);
                 });
-        });
+            } else {
+                setLoading(false);
+            }
+        } else {
+            setLoading(false);
+        }
     }, []);
-    
-    return (
-        <div className='flex-container'>
-            <div className='leftcolumn'>
-                <div className='card'>
-                    <div className='user'>
-                        <img 
-                        className='user-avatar'
-                        src={userImg} alt='User Avatar' 
-                        width='150px' height='150px'
-                        style={{borderRadius: '50%', flex: '0 0 150px'}}
-                        />
-                        <div className='user-info'>
-                            <p style={{fontSize: '25px'}}><b>Adimin</b></p>
-                            <p>超级管理员</p>
-                        </div>
-                    </div>
-                    <div className='login-info'>
-                        <pre>
-                            <p>上次登录时间:    <span>2025-2-20 17:18</span></p>
-                            <p>上次登录地点:    <span>武汉-洪山区-华中科技大学</span></p>
-                        </pre>
-                    </div>
-                </div>
-                <div className='card'>
-                    <Table rowKey={'name'} columns={tableColumns} dataSource={tableData} pagination={false} />
-                </div>
+
+    // 加载状态
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <div>加载中...</div>
             </div>
-            <div className='rightcolumn'>
-                <div className='sale-row'>
-                    {countData.map((item, index) => {
-                        return (
-                            <div 
-                            className='card' 
-                            key={index}
-                            style={{
-                                display: 'flex',
-                                flex: '1 1 220px',
-                                justifyContent: 'space-around',
-                                alignItems: 'center',
-                                height: '100px',
-                                margin: '10px 5px 5px 5px'}}>
-                                <div className='icon-box' style={{backgroundColor: item.color}}>
-                                    {iconToElement(item.icon)}
-                                </div>
-                                <div className='sale-info'>
-                                    <p className='sale-title' style={{ fontSize: '14px' ,color: 'LightGray' }}>{item.name}</p>
-                                    <p className='sale-value' style={{ fontSize: '20px' }}><b>￥</b>{item.value}</p>
+        );
+    }
+
+    return (
+        <Layout style={{ minHeight: '100vh' }}>
+            <Content style={{ 
+                padding: '0 16px', 
+                marginTop: '64px',
+                background: '#f5f5f5',
+                minHeight: 'calc(100vh - 64px)' 
+            }}>
+                <div className='flex-container'>
+                    <div className='leftcolumn'>
+                        <div className='card'>
+                            <div className='user'>
+                                <Avatar 
+                                    size={120}
+                                    src={userImg}
+                                    style={{ flexShrink: 0 }}
+                                />
+                                <div className='user-info'>
+                                    <p>{userInfo?.name || userInfo?.username || '用户'}</p>
+                                    <Tag color={getRoleColor(userInfo?.role)}>
+                                        {getRoleText(userInfo?.role)}
+                                    </Tag>
                                 </div>
                             </div>
-                        )}
-                    )}
-                </div>
-                <div className='chart-row' style={{justifyContent: 'center'}}>
-                    <div 
-                    className='card'
-                    style={{display: 'flex', height: '240px', width: '680px', alignItems: 'center'}}>
-                        {echartData.order&&
-                        <Echarts 
-                        chartData={echartData.order} 
-                        isAxisChart='true' 
-                        style={{height: '260px', width: '640px'}}
-                        />}
+                            <div className='login-info'>
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Statistic title="邮箱" value={userInfo?.email || '未设置'} />
+                                    </Col>
+                                    <Col span={12}>
+                                        <Statistic title="电话" value={userInfo?.phone || '未设置'} />
+                                    </Col>
+                                </Row>
+                                <div style={{marginTop: '16px'}}>
+                                    <p>上次登录时间: <span>{userInfo?.lastLoginAt ? new Date(userInfo.lastLoginAt).toLocaleString() : '未知'}</span></p>
+                                    <p>注册时间: <span>{userInfo?.createdAt ? new Date(userInfo.createdAt).toLocaleDateString() : '未知'}</span></p>
+                                </div>
+                                <div style={{marginTop: '24px', textAlign: 'center'}}>
+                                    <Button type="primary" onClick={handleEdit} size="large">
+                                        编辑个人信息
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <div className='rightcolumn'>
+                        {/* 用户统计信息卡片 */}
+                        <div className='card personal-stats'>
+                            <h3 style={{marginBottom: '16px', fontSize: '18px', fontWeight: '600', color: '#262626'}}>个人统计</h3>
+                            <Row gutter={16}>
+                                <Col span={8}>
+                                    <Card size="small">
+                                        <Statistic 
+                                            title="销售目标" 
+                                            value={userInfo?.salesTarget || 0} 
+                                            precision={2}
+                                            prefix="¥"
+                                        />
+                                    </Card>
+                                </Col>
+                                <Col span={8}>
+                                    <Card size="small">
+                                        <Statistic 
+                                            title="当前业绩" 
+                                            value={userInfo?.performance || 0} 
+                                            precision={2}
+                                            prefix="¥"
+                                        />
+                                    </Card>
+                                </Col>
+                                <Col span={8}>
+                                    <Card size="small">
+                                        <Statistic 
+                                            title="完成率" 
+                                            value={userInfo?.salesTarget ? ((userInfo.performance || 0) / userInfo.salesTarget * 100).toFixed(1) : 0} 
+                                            suffix="%"
+                                        />
+                                    </Card>
+                                </Col>
+                            </Row>
+                        </div>
+                    </div>
+                    <Modal
+                    title="编辑个人信息"
+                    open={editModalVisible}
+                    onCancel={() => setEditModalVisible(false)}
+                    footer={null}
+                    width={600}
+                >
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={handleEditSubmit}
+                    >
+                        <Form.Item
+                            label="姓名"
+                            name="name"
+                            rules={[{ required: true, message: '请输入姓名' }]}
+                        >
+                            <Input placeholder="请输入姓名" />
+                        </Form.Item>
+                        <Form.Item
+                            label="邮箱"
+                            name="email"
+                            rules={[
+                                { required: true, message: '请输入邮箱' },
+                                { type: 'email', message: '请输入有效的邮箱地址' }
+                            ]}
+                        >
+                            <Input placeholder="请输入邮箱" />
+                        </Form.Item>
+                        <Form.Item
+                            label="电话"
+                            name="phone"
+                            rules={[
+                                { required: true, message: '请输入电话' },
+                                { pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号码' }
+                            ]}
+                        >
+                            <Input placeholder="请输入电话" />
+                        </Form.Item>
+                        <Form.Item
+                            label="部门"
+                            name="department"
+                        >
+                            <Input placeholder="请输入部门" />
+                        </Form.Item>
+                        <Form.Item style={{ textAlign: 'right', marginTop: '24px' }}>
+                            <Button onClick={() => setEditModalVisible(false)} style={{ marginRight: '8px' }}>
+                                取消
+                            </Button>
+                            <Button type="primary" htmlType="submit">
+                                保存
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
                 </div>
-                <div className='chart-row' style={{justifyContent: 'space-between'}}>
-                    {echartData.video&&
-                        <Echarts 
-                        chartData={echartData.video} 
-                        isAxisChart='false'
-                        style={{height: '260px', width: '300px', marginLeft: '10px'}}
-                    />}
-                    {echartData.user&&
-                        <Echarts 
-                        chartData={echartData.user} 
-                        isAxisChart='true'
-                        style={{height: '260px', width: '380px', marginRight: '10px'}}
-                    />}
-                </div>
-            </div>
-        </div>
+            </Content>
+        </Layout>
     );
 }
 
-export default Home;
+export default PersonalCenter;

@@ -8,10 +8,18 @@ const menuList = [
         roles: ['admin', 'sales'] // 所有角色都可以访问
     },
     {
+        path: '/personal',
+        name: 'personal',
+        label: '个人中心',
+        icon: 'UserOutlined',
+        url: '/personal/index',
+        roles: ['admin', 'sales'] // 所有角色都可以访问
+    },
+    {
         path: '/sales',
         name: 'sales',
         label: '商户管理',
-        icon: 'UserOutlined',
+        icon: 'AuditOutlined',
         url: '/sales/index',
         roles: ['admin'] // 只有管理员可以访问
     },

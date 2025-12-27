@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Statistic, Table, Tag, Alert, Spin, Progress } from 'antd';
+import { Card, Row, Col, Statistic, Table, Tag, Alert, Spin } from 'antd';
 import { 
     ShopOutlined, 
     DollarCircleOutlined, 
     BarChartOutlined, 
-    PieChartOutlined,
     RiseOutlined,
     FallOutlined,
     ExclamationCircleOutlined,
     UserOutlined,
     ShoppingCartOutlined
 } from '@ant-design/icons';
-import Echarts from '../../components/echarts';
+import Echarts from '../../../components/echarts';
 import { 
     getAdminTotalStatistics,
     getAdminDailyReport,
     getAdminGrowthStatistics,
     getAdminCategoryDistribution,
     getAdminMerchantRanking
-} from '../../api/index';
+} from '../../../api/index';
 import './dashboard.css';
 
 const AdminDashboard = () => {

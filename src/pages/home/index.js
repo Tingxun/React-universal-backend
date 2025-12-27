@@ -1,6 +1,6 @@
 import React from 'react';
-import Dashboard from './Dashboard';
-import AdminDashboard from './AdminDashboard';
+import Dashboard from './components/Dashboard';
+import AdminDashboard from './components/AdminDashboard';
 import { getCurrentUser } from '../../utils/jwt';
 
 // 新的home页面根据用户角色显示不同的仪表盘组件

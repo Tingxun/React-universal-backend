@@ -1,81 +1,220 @@
 * {
   box-sizing: border-box;
 }
-/* 弹性布局 */
+
+/* 主容器 */
 .flex-container {
   display: flex;
   flex-wrap: wrap;
-  flex: 100%;
-  }
-.sale-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
+  padding: 24px;
+  gap: 24px;
+  min-height: calc(100vh - 64px - 32px);
+  background-color: #f5f5f5;
 }
-.chart-row {
-  display: flex;
-}
+
+/* 左侧列 */
 .leftcolumn {
-  flex: 40%;
+  flex: 0 0 400px;
+  min-width: 0;
 }
+
+/* 右侧列 */
 .rightcolumn {
-  flex: 60%;
+  flex: 1;
+  min-width: 0;
 }
-.col-8 {
-  flex: 33.33%;
-}
-/* 卡片 */
+
+/* 卡片样式 */
 .card {
   background-color: white;
-  margin: 10px;
-  padding: 20px;
-  border-radius: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
+
 .card:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
-/* 其他 */
+
+/* 用户信息区域 */
 .user {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user .user-info {
+  margin-left: 16px;
+  flex: 1;
+}
+
+.user .user-info p {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+/* 登录信息区域 */
+.login-info {
+  padding: 24px;
+}
+
+.login-info .ant-statistic {
+  margin-bottom: 16px;
+}
+
+.login-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #8c8c8c;
+}
+
+.login-info p span {
+  color: #262626;
+  font-weight: 500;
+}
+
+/* 销售数据行 */
+.sale-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sale-row .card {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  height: 100px;
+}
+
+.sale-row .icon-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.sale-row .icon-box .anticon {
+  font-size: 24px;
+  color: white;
+}
+
+.sale-row .sale-info {
+  flex: 1;
+}
+
+.sale-row .sale-title {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin: 0 0 4px 0;
+}
+
+.sale-row .sale-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0;
+}
+
+.sale-row .sale-value b {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* 统计卡片 */
+.personal-stats .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.personal-stats .ant-card-body {
+  padding: 16px;
+}
+
+/* 模态框样式优化 */
+.ant-modal .ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+}
+
+.ant-modal .ant-input {
+  border-radius: 6px;
+}
+
+.ant-modal .ant-btn {
+  border-radius: 6px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .flex-container {
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .leftcolumn,
+  .rightcolumn {
+    flex: 1;
+    width: 100%;
+  }
+  
+  .user {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .user .user-info {
+    margin-left: 0;
+    margin-top: 16px;
+  }
+  
+  .sale-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .card {
+    margin: 0;
+    padding: 16px;
+  }
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 10px;
-  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+  height: 200px;
+  font-size: 16px;
+  color: #8c8c8c;
 }
-.user .user-info {
-  flex: 50%;
+
+/* 标签样式优化 */
+.ant-tag {
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
 }
-.user .user-avatar {
-  flex: 50%;
+
+/* 按钮样式优化 */
+.ant-btn-primary {
+  border-radius: 6px;
+  font-weight: 500;
 }
-.login-info {
-  text-align: start;
-  padding-top: 10px;
-}
-.login-info p {
-  line-height: 2px;
-  font-size: 14px;
-  color: lightgray;
-}
-.login-info p span {
-  line-height: 30px;
-  font-size: 14px;
-  color: gray;
-}
-.sale-row .icon-box {
-  width: 80px;
-  height: 80px;
-  line-height: 85px;
-  text-align: center;
-  color: white;
-  border-radius: 0 25px 0 25px;
-}
-.sale-row .icon-box .anticon {
-  font-size: 30px;
-}
-.sale-row .sale-info {
-  line-height: 30px;
-  text-align: center;
+
+.ant-btn-default {
+  border-radius: 6px;
 }

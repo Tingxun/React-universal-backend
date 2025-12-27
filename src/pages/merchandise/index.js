@@ -121,7 +121,7 @@ function Merchandise() {
                 rankingType: 'sales',
                 limit: 5
             });
-            console.log('获取商户排行数据成功:', res || []);
+            // console.log('获取商户排行数据成功:', res || []);
             
             if (res.data.code === 20000) {
                 const data = res.data.data;
@@ -165,7 +165,7 @@ function Merchandise() {
                 startDate: '2024-01-01',
                 endDate: '2024-12-31'
             });
-            console.log('获取商品分类统计数据成功:', res || []);
+            // console.log('获取商品分类统计数据成功:', res || []);
             
             if (res.data.code === 20000) {
                 const data = res.data.data;
@@ -205,7 +205,7 @@ function Merchandise() {
                 endDate: '2024-12-31',
                 groupBy: 'month'
             });
-            console.log('获取商品类别销售数据成功:', res || []);
+            // console.log('获取商品类别销售数据成功:', res || []);
             
             if (res.data.code === 20000) {
                 const data = res.data.data;
@@ -249,7 +249,7 @@ function Merchandise() {
             const res = await getProductList({});
             
             if (res.data.code === 20000) {
-                console.log('获取商品列表成功:', res || []);
+                // console.log('获取商品列表成功:', res || []);
                 setAllProducts(res.data.data.list || []);
             } else {
                 message.error(res.data.message || '获取商品列表失败');

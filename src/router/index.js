@@ -7,6 +7,7 @@ import Login from '../pages/login';
 import Register from '../pages/register';
 import PageTwo from '../pages/other/pageTwo';
 import PageOne from '../pages/other/pageOne';
+import PersonalCenter from '../pages/personal';
 import RouteGuard from './RouteGuard';
 
 /**
@@ -40,6 +41,14 @@ const routes = [
                 element: <Home />,
             },
             {
+                path: 'personal',
+                element: (
+                    <RouteGuard requiredRoles={['admin', 'merchant', 'sales']} redirectTo="/login">
+                        <PersonalCenter />
+                    </RouteGuard>
+                ),
+            },
+            {
                 path: 'sales',
                 element: (
                     <RouteGuard requiredRoles={['admin']} redirectTo="/home">
@@ -49,7 +58,11 @@ const routes = [
             },
             {
                 path: 'merchandise',
-                element: <Merchandise />,
+                element: (
+                    <RouteGuard requiredRoles={['admin', 'merchant', 'sales']} redirectTo="/login">
+                        <Merchandise />
+                    </RouteGuard>
+                ),
             },
             {
                 path: 'other',

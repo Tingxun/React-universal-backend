@@ -10,50 +10,6 @@ import http from "./axios"
  * 
  */
 
-// 获取数据api
-export function getHomeData() {
-    return http.request({
-        url: "/home/getHomeData",
-        method: "get"
-    })
-}
-export function getUserList(params) {
-    return http.request({
-        url: "/user/getUserList",
-        method: "get",
-        params
-    })
-}
-export function createUser(data) {
-    return http.request({
-        url: "/user/createUser",
-        method: "post",
-        data
-    })
-}
-export function updateUser(data) {
-    return http.request({
-        url: "/user/updateUser",
-        method: "post",
-        data
-    })
-}
-export function deleteUser(data) {
-    return http.request({
-        url: "/user/deleteUser",
-        method: "post",
-        data
-    })
-}
-
-export function getMenu(data) {
-    return http.request({
-        url: "/permission/getMenu",
-        method: "post",
-        data
-    })
-}
-
 // 测试用API
 export function getData() {
     return http.request({
@@ -290,5 +246,21 @@ export function getAdminMerchantRanking(params) {
         url: "/api/admin/ranking",
         method: "get",
         params
+    })
+}
+
+// 用户个人信息API
+export function getUserProfile(userId) {
+    return http.request({
+        url: `/api/users/${userId}`,
+        method: "get"
+    })
+}
+
+export function updateUserProfile(userId, data) {
+    return http.request({
+        url: `/api/users/${userId}`,
+        method: "put",
+        data
     })
 }
